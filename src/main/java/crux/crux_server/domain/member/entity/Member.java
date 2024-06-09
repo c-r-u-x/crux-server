@@ -16,17 +16,21 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "kakaoId", nullable = false, unique = true, length = 50)
-    private String kakaoId;
+    @Column(name = "oauth2id", nullable = false, unique = true, length = 50)
+    private String oauth2id;
+
+    @Column(name = "name", length = 30)
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
     @Builder
-    public Member(Long id, String kakaoId, Role role) {
+    public Member(Long id, String oauth2id, String name, Role role) {
         this.id = id;
-        this.kakaoId = kakaoId;
+        this.oauth2id = oauth2id;
+        this.name = name;
         this.role = role;
     }
 }

@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    include: oauth2
+
   application:
     name: crux-server
 
@@ -36,6 +39,11 @@ spring:
     user:
       name: user
       password: 1234
+
+jwt:
+  secret: Hello_This_Is_My_Secret_Key_For_JWT_Hello_This_Is_My_Secret_Key_For_JWT_Hello_This_Is_My_Secret_Key_For_JWT
+  access-token-time: 600000  # 10분
+  refresh-token-time: 8640000000  # 100일
 
 server:
   port: 8080

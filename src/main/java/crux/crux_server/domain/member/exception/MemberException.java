@@ -8,4 +8,10 @@ public class MemberException extends CustomException {
     protected MemberException(ErrorCode errorCode) {
         super(errorCode);
     }
+
+    public static class MemberNotFoundException extends MemberException {
+        public MemberNotFoundException() {
+            super(ErrorCode.MEMBER_NOT_FOUND);
+        }
+    }
 }

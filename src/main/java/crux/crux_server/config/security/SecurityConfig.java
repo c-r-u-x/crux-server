@@ -3,6 +3,7 @@ package crux.crux_server.config.security;
 import crux.crux_server.config.login.handler.FailureHandler;
 import crux.crux_server.config.login.handler.SuccessHandler;
 import crux.crux_server.config.login.jwt.JwtAuthenticationFilter;
+import crux.crux_server.config.login.oauth2.OAuth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -27,6 +28,7 @@ import org.springframework.web.cors.CorsConfiguration;
 @EnableWebSecurity
 @EnableMethodSecurity() // prePostEnabled 어노테이션 활성화
 public class SecurityConfig {
+    private final OAuth2Service oAuth2Service;
     private final SuccessHandler successHandler;
     private final FailureHandler failureHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -61,6 +63,8 @@ public class SecurityConfig {
             .formLogin(AbstractHttpConfigurer::disable) // 폼 로그인 비활성화
             // oauth2 로그인 설정
             .oauth2Login(oauth2 -> oauth2
+                    .userInfoEndpoint(userInfo -> userInfo
+                            .userService(oAuth2Service)) // 사용자 정보 가져오는 서비스
                     .successHandler(successHandler) // 로그인 성공 핸들러
                     .failureHandler(failureHandler) // 로그인 실패 핸들러
                     .permitAll()) // 로그인 페이지는 모든 사용자 허용

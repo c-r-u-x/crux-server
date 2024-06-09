@@ -18,6 +18,11 @@ public enum ErrorCode {
     INVALID_VERIFICATION_CODE(1000, "인증 코드가 유효하지 않습니다"),
     VERIFICATION_CODE_NOT_FOUND(1001, "인증 코드를 찾을 수 없습니다"),
     LOGIN_FAILED(1002, "로그인 실패"),
+
+    // 1001: Member
+    MEMBER_NOT_FOUND(1001, "멤버를 찾을 수 없습니다"),
+
+
     ;
 
     private final int code;

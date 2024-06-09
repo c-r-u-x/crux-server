@@ -3,6 +3,7 @@ package crux.crux_server.config.login.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import crux.crux_server.config.login.jwt.JwtTokenProvider;
 import crux.crux_server.config.login.jwt.JwtTokenType;
+import crux.crux_server.config.login.oauth2.CustomOAuth2User;
 import crux.crux_server.config.security.AuthMember;
 import crux.crux_server.global.dto.JsonBody;
 import crux.crux_server.global.dto.TokenDto;
@@ -27,10 +28,10 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         // 인증된 사용자 정보를 가져온다.
-        AuthMember authMember = (AuthMember) authentication.getPrincipal();
+        CustomOAuth2User authMember = (CustomOAuth2User) authentication.getPrincipal();
         // 토큰 생성
-        String accessToken = jwtTokenProvider.createToken(authMember.getId(), JwtTokenType.ACCESS_TOKEN);
-        String refreshToken = jwtTokenProvider.createToken(authMember.getId(), JwtTokenType.REFRESH_TOKEN);
+        String accessToken = jwtTokenProvider.createToken(authMember.getMemberId(), JwtTokenType.ACCESS_TOKEN);
+        String refreshToken = jwtTokenProvider.createToken(authMember.getMemberId(), JwtTokenType.REFRESH_TOKEN);
         // 토큰 DTO 생성
         TokenDto tokens = TokenDto.of(accessToken, refreshToken);
         // 응답 생성

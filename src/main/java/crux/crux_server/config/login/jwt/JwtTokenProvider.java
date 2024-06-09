@@ -41,8 +41,8 @@ public class JwtTokenProvider {
 
     // JWT 토큰 생성
     public String createToken(Long memberId, JwtTokenType tokenType) throws MemberException {
-        // todo: 멤버 조회
-        Member member = Member.builder().build();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberException.MemberNotFoundException::new);
         // 토큰 생성
         Claims claims = Jwts.claims().setSubject(member.getId().toString()); // JWT payload 에 저장되는 정보단위, 보통 여기서 user를 식별하는 값을 넣는다.
         claims.put("type", tokenType.getTokenType()); // 토큰 타입 (access token, refresh token)
