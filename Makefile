@@ -1,2 +1,2 @@
-include build/common.mk
-include build/k8s.mk
+include builds/common.mk
+include builds/k8s.mk
