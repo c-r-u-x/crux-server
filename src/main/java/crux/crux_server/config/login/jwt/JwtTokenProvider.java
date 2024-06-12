@@ -1,5 +1,7 @@
 package crux.crux_server.config.login.jwt;
 
+import crux.crux_server.config.EnvBean;
+import crux.crux_server.config.login.exception.JwtCustomException;
 import crux.crux_server.config.security.AuthMember;
 import crux.crux_server.domain.member.entity.Member;
 import crux.crux_server.domain.member.exception.MemberException;
@@ -10,10 +12,10 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
 import java.util.Date;
@@ -24,22 +26,18 @@ import java.util.Date;
 @Slf4j(topic = "JwtTokenProvider")
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-    @Value("${jwt.secret}")
+    private EnvBean envBean;
     private String secretKey;
-    @Value("${jwt.access-token-time}")
-    private long accessTokenTime;
-    @Value("${jwt.refresh-token-time}")
-    private long refreshTokenTime;
-
     private final MemberRepository memberRepository;
 
     // 객체 초기화, secretKey를 Base64로 인코딩한다.
     @PostConstruct
     protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+        secretKey = Base64.getEncoder().encodeToString(envBean.getJwtSecretKey().getBytes());
     }
 
     // JWT 토큰 생성
+    @Transactional
     public String createToken(Long memberId, JwtTokenType tokenType) throws MemberException {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberException.MemberNotFoundException::new);
@@ -50,12 +48,11 @@ public class JwtTokenProvider {
         Date expiration;
 
         if (tokenType == JwtTokenType.REFRESH_TOKEN) { // refresh token
-            expiration = new Date(now.getTime() + refreshTokenTime);
+            expiration = new Date(now.getTime() + envBean.getRefreshTokenTime());
         } else if (tokenType == JwtTokenType.ACCESS_TOKEN) { // access token
-            expiration = new Date(now.getTime() + accessTokenTime);
+            expiration = new Date(now.getTime() + envBean.getAccessTokenTime());
         } else {
-            // todo: 예외처리
-            throw new RuntimeException("Invalid Token Type");
+            throw new JwtCustomException.JwtInvalidException();
         }
 
         return Jwts.builder()
@@ -67,14 +64,17 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰에서 인증 정보 조회
+    @Transactional
     public Authentication getAuthentication(Jws<Claims> claimsJws) throws MemberException {
         String memberId = claimsJws.getBody().getSubject();
-        //
-//        Member member = memberRepository.findById(Long.parseLong(memberId))
-//                .orElseThrow(MemberException.MemberNotFoundException::new);
 
-        // todo: AuthMember 객체 생성
+        Member member = memberRepository.findById(Long.parseLong(memberId))
+                .orElseThrow(MemberException.MemberNotFoundException::new);
+
+        // todo: Member 테이블 결정 후 AuthMember 객체 수정
         AuthMember authMember = AuthMember.builder()
+                .id(member.getId())
+                .role(member.getRole().getName())
                 .build();
 
         return new UsernamePasswordAuthenticationToken(authMember, "", authMember.getAuthorities());

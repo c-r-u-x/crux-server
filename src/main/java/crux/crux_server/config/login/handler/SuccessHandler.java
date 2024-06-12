@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import crux.crux_server.config.login.jwt.JwtTokenProvider;
 import crux.crux_server.config.login.jwt.JwtTokenType;
 import crux.crux_server.config.login.oauth2.CustomOAuth2User;
-import crux.crux_server.config.security.AuthMember;
 import crux.crux_server.global.dto.JsonBody;
 import crux.crux_server.global.dto.TokenDto;
 import jakarta.servlet.FilterChain;

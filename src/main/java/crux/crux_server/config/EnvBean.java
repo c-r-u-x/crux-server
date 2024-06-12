@@ -1,6 +1,7 @@
 package crux.crux_server.config;
 
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,5 +11,10 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 public class EnvBean {
-
+    @Value("${jwt.secret}")
+    private String jwtSecretKey;
+    @Value("${jwt.access-token-time}")
+    private long accessTokenTime;
+    @Value("${jwt.refresh-token-time}")
+    private long refreshTokenTime;
 }

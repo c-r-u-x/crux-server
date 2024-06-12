@@ -1,5 +1,7 @@
 package crux.crux_server.config.login.jwt;
 
+import crux.crux_server.config.login.exception.JwtCustomException;
+import crux.crux_server.global.exception.HttpException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -35,26 +37,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Jws<Claims> claims = jwtTokenProvider.validateAndParseToken(jwt);
                 // 토큰 타입이 올바른지 확인합니다.
                 if (!jwtTokenProvider.isAccessToken(claims)) {
-                    throw new JwtException("토큰 타입이 올바르지 않습니다.");
+                    throw new JwtCustomException.JwtInvalidException();
                 }
                 // 토큰이 유효하면 토큰으로부터 유저 정보를 받아옵니다.
                 Authentication authentication = jwtTokenProvider.getAuthentication(claims);
                 // SecurityContext 에 Authentication 객체를 저장합니다.
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (ExpiredJwtException e) { // 유효하지 않은 토큰
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Expired Token");
-            return;
+        } catch (ExpiredJwtException e) { // 유효기간이 지난 토큰
+            throw new JwtCustomException.JwtExpiredException();
         } catch (JwtException e) { // 유효하지 않은 토큰
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid Token");
-            return;
+            throw new JwtCustomException.JwtInvalidException();
         } catch (Exception e) { // 그 외 에러
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("Jwt Filter Error");
-            log.error(e.getMessage());
-            return;
+            log.error("Jwt Filter Error", e);
+            throw new HttpException.InternalServerException();
         }
         // 요청으로 들어온 request, response 를 다음 필터로 넘깁니다.
         chain.doFilter(request, response);

@@ -4,24 +4,25 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ErrorCode {
     // Basic HTTP Status Code
     BAD_REQUEST(400, "Bad Request"),
     UNAUTHORIZED(401, "Unauthorized"),
     FORBIDDEN(403, "Forbidden"),
     NOT_FOUND(404, "Not Found"),
+    CONFLICT(409, "Conflict"),
     INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
 
-    // 1000: Authentication
-    INVALID_VERIFICATION_CODE(1000, "인증 코드가 유효하지 않습니다"),
-    VERIFICATION_CODE_NOT_FOUND(1001, "인증 코드를 찾을 수 없습니다"),
-    LOGIN_FAILED(1002, "로그인 실패"),
+    // 10000 ~ 19999: Login, JWT
+    LOGIN_FAILED(10401, "로그인 실패"),
 
-    // 1001: Member
-    MEMBER_NOT_FOUND(1001, "멤버를 찾을 수 없습니다"),
+    JWT_INVALID(11400, "JWT 토큰이 유효하지 않습니다"),
+    JWT_EXPIRED(11400, "JWT 토큰이 만료 되었습니다."),
 
+    // 20000 ~ 29999: Member
+    MEMBER_NOT_FOUND(20404, "멤버를 찾을 수 없습니다"),
 
     ;
 

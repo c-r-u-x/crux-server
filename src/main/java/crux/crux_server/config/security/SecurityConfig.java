@@ -4,6 +4,7 @@ import crux.crux_server.config.login.handler.FailureHandler;
 import crux.crux_server.config.login.handler.SuccessHandler;
 import crux.crux_server.config.login.jwt.JwtAuthenticationFilter;
 import crux.crux_server.config.login.oauth2.OAuth2Service;
+import crux.crux_server.global.exception.HttpException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -68,26 +69,21 @@ public class SecurityConfig {
                     .successHandler(successHandler) // 로그인 성공 핸들러
                     .failureHandler(failureHandler) // 로그인 실패 핸들러
                     .permitAll()) // 로그인 페이지는 모든 사용자 허용
-            // 로그아웃 설정
-            .logout(logout -> logout
-                    .logoutUrl("/logout") // 로그아웃 url
-                    .deleteCookies("JSESSIONID") // 쿠키 삭제
-                    .permitAll()) // 로그아웃 페이지는 모든 사용자 허용
             // 로그인 예외 처리
             .exceptionHandling(exception -> exception
                     // 인증 실패 핸들러
                     .authenticationEntryPoint((request, response, authException) -> {
-                        response.setStatus(HttpStatus.UNAUTHORIZED.value()); // 401
+                        throw new HttpException.UnauthorizedException();
                     })
                     // 권한 없음 핸들러
                     .accessDeniedHandler((request, response, accessDeniedException) -> {
-                        response.setStatus(HttpStatus.FORBIDDEN.value()); // 403
+                        throw new HttpException.ForbiddenException();
                     })
             )
             // 허용 경로 설정
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(WHITE_LIST).permitAll() // 모든 사용자 허용 경로 (모든 메소드)
-                    .anyRequest().permitAll()
+                    .anyRequest().authenticated() // 그 외 나머지 경로는 전부 인증 필요
 
             );
 
