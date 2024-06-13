@@ -1,0 +1,55 @@
+spring:
+  profiles:
+    include: oauth2
+
+  application:
+    name: crux-server
+
+  graphql:
+    graphiql:
+      enabled: true
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/Duett
+    username: root
+    password: 1234
+
+  # ????? H2 Console ??
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+  security:
+    user:
+      name: user
+      password: 1234
+
+jwt:
+  secret: Hello_This_Is_My_Secret_Key_For_JWT_Hello_This_Is_My_Secret_Key_For_JWT_Hello_This_Is_My_Secret_Key_For_JWT
+  access-token-time: 600000  # 10분
+  refresh-token-time: 8640000000  # 100일
+
+server:
+  port: 8080
+
+  error:
+    include-exception: false      # Response ? Exception ? ????
+    include-message: always       # Response ? Exception Message ? ???? (never | always | on_param)
+    include-stacktrace: never     # Response ? Stack Trace ? ???? (never | always | on_param)
+    whitelabel.enabled: true      # ?? ?? ? Spring ?? ?? ??? ?? ??
