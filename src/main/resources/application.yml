@@ -25,7 +25,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update  # flyway가 실행되고 ddl-auto가 실행됨. 따라서 create로 설정하면 안됨. 배포 시에는 validate로 설정.
     show-sql: false
     properties:
       hibernate:
@@ -51,7 +51,7 @@ server:
   port: 8080
 
   error:
-    include-exception: false      # Response ? Exception ? ????
-    include-message: always       # Response ? Exception Message ? ???? (never | always | on_param)
-    include-stacktrace: never     # Response ? Stack Trace ? ???? (never | always | on_param)
-    whitelabel.enabled: true      # ?? ?? ? Spring ?? ?? ??? ?? ??
+    include-exception: false
+    include-message: always
+    include-stacktrace: never
+    whitelabel.enabled: true
