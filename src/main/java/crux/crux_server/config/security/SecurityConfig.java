@@ -51,13 +51,6 @@ public class SecurityConfig {
     };
 
     @Bean
-    @ConditionalOnProperty(name = "spring.h2.console.enabled", havingValue = "true")
-    public WebSecurityCustomizer configureH2ConsoleEnable() {
-        return web -> web.ignoring()
-                .requestMatchers(PathRequest.toH2Console());
-    }
-
-    @Bean
     protected SecurityFilterChain apiConfig(HttpSecurity http) throws Exception {
         // 로그인 설정
         http

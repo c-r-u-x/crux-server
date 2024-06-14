@@ -26,8 +26,8 @@ import java.util.Date;
 @Slf4j(topic = "JwtTokenProvider")
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-    private EnvBean envBean;
     private String secretKey;
+    private final EnvBean envBean;
     private final MemberRepository memberRepository;
 
     // 객체 초기화, secretKey를 Base64로 인코딩한다.
