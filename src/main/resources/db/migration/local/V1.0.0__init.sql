@@ -1,4 +1,4 @@
-# role 테이블 생성
+-- # role 테이블 생성
 create table role
 (
     created_date  datetime(6)  null,
@@ -10,7 +10,7 @@ create table role
         unique (name)
 );
 
-# member 테이블 생성
+-- # member 테이블 생성
 create table member
 (
     created_date  datetime(6) null,
