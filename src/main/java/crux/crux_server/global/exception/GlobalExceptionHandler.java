@@ -3,7 +3,6 @@ package crux.crux_server.global.exception;
 import crux.crux_server.config.login.exception.JwtCustomException;
 import crux.crux_server.domain.member.exception.MemberException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.validation.FieldError;
@@ -29,7 +28,8 @@ public class GlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        final ErrorResponse response = ErrorResponse.from(CustomException.of(ErrorCode.BAD_REQUEST, errors));
+
+        final ErrorResponse response = ErrorResponse.from(new HttpException.BadRequestException(errors));
         return ResponseEntity.badRequest().body(response);
 
     }
@@ -41,7 +41,8 @@ public class GlobalExceptionHandler {
         String fieldName = ex.getName();
         String errorMessage = "Invalid value for field: " + fieldName;
         errors.put(fieldName, errorMessage);
-        final ErrorResponse response = ErrorResponse.from(CustomException.of(ErrorCode.BAD_REQUEST, errors));
+
+        final ErrorResponse response = ErrorResponse.from(new HttpException.BadRequestException(errors));
         return ResponseEntity.badRequest().body(response);
     }
 
@@ -49,7 +50,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageConversionException.class)
     protected ResponseEntity<ErrorResponse> handleHttpMessageConversionException(final HttpMessageConversionException e) {
         log.error("HttpMessageConversionException", e);
-        final ErrorResponse response = ErrorResponse.from(CustomException.from(ErrorCode.BAD_REQUEST));
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", "Invalid request body");
+
+        final ErrorResponse response = ErrorResponse.from(new HttpException.BadRequestException(errors));
         return ResponseEntity.badRequest().body(response);
     }
 
@@ -65,21 +69,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(BAD_REQUEST).body(ErrorResponse.from(e));
     }
 
-    // 401 Unauthorized
-    @ExceptionHandler({
-            // 인증 오류 추가
-    })
-    public ResponseEntity<ErrorResponse> handleGlobalUnauthorizedException(final CustomException e) {
-        return ResponseEntity.status(UNAUTHORIZED).body(ErrorResponse.from(e));
-    }
-
-    // 403 Forbidden
-    @ExceptionHandler({
-            // 권한 오류 추가
-    })
-    public ResponseEntity<ErrorResponse> handleGlobalForbiddenException(final CustomException e) {
-        return ResponseEntity.status(FORBIDDEN).body(ErrorResponse.from(e));
-    }
+//    // 401 Unauthorized
+//    @ExceptionHandler({
+//            // 인증 오류 추가
+//    })
+//    public ResponseEntity<ErrorResponse> handleGlobalUnauthorizedException(final CustomException e) {
+//        return ResponseEntity.status(UNAUTHORIZED).body(ErrorResponse.from(e));
+//    }
+//
+//    // 403 Forbidden
+//    @ExceptionHandler({
+//            // 권한 오류 추가
+//    })
+//    public ResponseEntity<ErrorResponse> handleGlobalForbiddenException(final CustomException e) {
+//        return ResponseEntity.status(FORBIDDEN).body(ErrorResponse.from(e));
+//    }
 
     // 404 Not Found
     @ExceptionHandler({
@@ -89,20 +93,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(NOT_FOUND).body(ErrorResponse.from(e));
     }
 
-    // 409 Conflict
-    @ExceptionHandler({
-            // 중복 오류 추가
-    })
-    public ResponseEntity<ErrorResponse> handleGlobalConflictException(final CustomException e) {
-        return ResponseEntity.status(CONFLICT).body(ErrorResponse.from(e));
-    }
-
-    // 500 Internal Server Error
-    @ExceptionHandler({
-            // 서버 오류 추가
-    })
-    public ResponseEntity<ErrorResponse> handleGlobalInternalServerException(final CustomException e) {
-        log.error(e.getErrorInfoLog());
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(ErrorResponse.from(e));
-    }
+//    // 409 Conflict
+//    @ExceptionHandler({
+//            // 중복 오류 추가
+//    })
+//    public ResponseEntity<ErrorResponse> handleGlobalConflictException(final CustomException e) {
+//        return ResponseEntity.status(CONFLICT).body(ErrorResponse.from(e));
+//    }
+//
+//    // 500 Internal Server Error
+//    @ExceptionHandler({
+//            // 서버 오류 추가
+//    })
+//    public ResponseEntity<ErrorResponse> handleGlobalInternalServerException(final CustomException e) {
+//        log.error(e.getErrorInfoLog());
+//        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(ErrorResponse.from(e));
+//    }
 }
