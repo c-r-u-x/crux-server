@@ -23,7 +23,7 @@
 
 ## Current behavior
 
-## New behavior?
+## New behavior
 
 
 ## Other information
