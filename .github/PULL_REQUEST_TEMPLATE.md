@@ -21,9 +21,9 @@
 - [ ] Documentation content changes
 
 
-## What is the current behavior?
+## Current behavior
 
-## What is the new behavior?
+## New behavior?
 
 
 ## Other information
