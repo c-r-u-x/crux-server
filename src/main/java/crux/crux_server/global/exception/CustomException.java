@@ -9,39 +9,39 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@ToString
 @Getter
+@ToString
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CustomException extends RuntimeException {
 
     private static final String EXCEPTION_INFO_BRACKET = "{ %s | %s }";
     private static final String CODE_MESSAGE = " Code: %d, Message: %s ";
-    private static final String PROPERTY_VALUE = "Property: %s, Value: %s ";
-    private static final String VALUE_DELIMITER = "/";
+    private static final String PROPERTY_VALUE = "%s=%s";
+    private static final String VALUE_DELIMITER = "; ";
     private static final String RESPONSE_MESSAGE = "%d %s";
 
     private final int code;
     private final String message;
-    private final Map<String, String> inputValuesByProperty;
+    private final Map<String, String> property;
 
     protected CustomException(final ErrorCode errorCode) {
         this(errorCode, Collections.emptyMap());
     }
 
     protected CustomException(
-        final ErrorCode errorCode,
-        final Map<String, String> inputValuesByProperty
+            final ErrorCode errorCode,
+            final Map<String, String> property
     ) {
         this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
-        this.inputValuesByProperty = inputValuesByProperty;
+        this.property = property;
     }
 
     public static CustomException of(
-        final ErrorCode errorCode,
-        final Map<String, String> propertyValues
+            final ErrorCode errorCode,
+            final Map<String, String> property
     ) {
-        return new CustomException(errorCode, propertyValues);
+        return new CustomException(errorCode, property);
     }
 
     public static CustomException from(final ErrorCode errorCode) {
@@ -51,16 +51,16 @@ public class CustomException extends RuntimeException {
 
     public String getErrorInfoLog() {
         final String codeMessage = String.format(CODE_MESSAGE, code, message);
-        final String errorPropertyValue = getErrorPropertyValue();
+        final String errorPropertyValue = getPropertyToString();
 
         return String.format(EXCEPTION_INFO_BRACKET, codeMessage, errorPropertyValue);
     }
 
-    private String getErrorPropertyValue() {
-        return inputValuesByProperty.entrySet()
-            .stream()
-            .map(entry -> String.format(PROPERTY_VALUE, entry.getKey(), entry.getValue()))
-            .collect(Collectors.joining(VALUE_DELIMITER));
+    public String getPropertyToString() {
+        return property.entrySet()
+                .stream()
+                .map(entry -> String.format(PROPERTY_VALUE, entry.getKey(), entry.getValue()))
+                .collect(Collectors.joining(VALUE_DELIMITER));
     }
 
     public String getErrorResponse() {
