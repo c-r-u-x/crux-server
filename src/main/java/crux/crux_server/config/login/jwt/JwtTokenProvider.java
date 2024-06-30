@@ -97,7 +97,7 @@ public class JwtTokenProvider {
 //    // 토큰의 유효성 + 만료일자 확인
     public Jws<Claims> validateAndParseToken(String jwt) {
         JwtParser jwtParser = Jwts.parser()
-                .decryptWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
+                .verifyWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
                 .build();
         return jwtParser.parseSignedClaims(jwt);
     }

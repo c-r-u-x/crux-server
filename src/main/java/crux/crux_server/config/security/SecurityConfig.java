@@ -66,11 +66,11 @@ public class SecurityConfig {
             .exceptionHandling(exception -> exception
                     // 인증 실패 핸들러
                     .authenticationEntryPoint((request, response, authException) -> {
-                        throw new HttpException.UnauthorizedException();
+                        response.setStatus(HttpStatus.UNAUTHORIZED.value());
                     })
                     // 권한 없음 핸들러
                     .accessDeniedHandler((request, response, accessDeniedException) -> {
-                        throw new HttpException.ForbiddenException();
+                        response.setStatus(HttpStatus.FORBIDDEN.value());
                     })
             )
             // 허용 경로 설정
