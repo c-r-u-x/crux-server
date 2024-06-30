@@ -1,0 +1,12 @@
+type member {
+    id: ID!
+    name: String
+}
+
+type Query {
+    getMember(id: ID!): member
+}
+
+type Mutation {
+    changeMemberName(id: ID!, name: String!): member
+}

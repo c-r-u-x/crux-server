@@ -1,5 +1,6 @@
 package crux.crux_server.domain.member.entity;
 
+import crux.crux_server.domain.member.enums.RoleName;
 import crux.crux_server.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -16,11 +17,12 @@ public class Role extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, unique = true)
-    private String name;
+    private RoleName name;
 
     @Builder
-    public Role(Long id, String name) {
+    public Role(Long id, RoleName name) {
         this.id = id;
         this.name = name;
     }

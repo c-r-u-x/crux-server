@@ -59,7 +59,7 @@ public class OAuth2Service extends DefaultOAuth2UserService {
     private Member findOrSaveMember(OAuth2User oAuth2User, String registrationId, String name) {
         String oauth2Id = registrationId + ":" + oAuth2User.getName();
         // 임시 유저로 역할 설정
-        Role role = roleRepository.findByName(RoleName.USER.name())
+        Role role = roleRepository.findByName(RoleName.USER)
                 .orElseThrow(() -> new OAuth2AuthenticationException("존재하지 않는 권한입니다."));
         // todo: member 엔티티 확정 후 수정
         return memberRepository.findByOauth2id(oauth2Id)
