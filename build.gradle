@@ -51,8 +51,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.12.6'
 
-	// https://mvnrepository.com/artifact/org.flywaydb/flyway-core
-	implementation group: 'org.flywaydb', name: 'flyway-core', version: '10.15.0'
+//	// https://mvnrepository.com/artifact/org.flywaydb/flyway-core
+//	implementation group: 'org.flywaydb', name: 'flyway-core', version: '10.15.0'
 	// https://mvnrepository.com/artifact/org.flywaydb/flyway-mysql
 	implementation group: 'org.flywaydb', name: 'flyway-mysql', version: '10.15.0'
 

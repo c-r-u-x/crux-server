@@ -9,9 +9,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MemberDto {
     private Long id;
-    private String phoneNumber;
     private String kakaoId;
-    private Integer coin;
-    private String state;
     private String role;
 }

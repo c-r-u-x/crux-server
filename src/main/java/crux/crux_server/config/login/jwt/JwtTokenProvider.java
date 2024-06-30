@@ -82,11 +82,15 @@ public class JwtTokenProvider {
 
 //    // Request의 Header에서 token 값을 가져옵니다. "Authorization" : Bearer [TOKEN 값]'
     public String resolveToken(HttpServletRequest request) {
-        String value = request.getHeader("Authorization");
-        if (value != null && value.startsWith("Bearer ")) {
-            return value.substring(7);
-        } else {
-            return null;
+        try {
+            String value = request.getHeader("Authorization");
+            if (value != null && value.startsWith("Bearer ")) {
+                return value.substring(7);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            throw  new JwtException("토큰이 유효하지 않습니다.");
         }
     }
 
