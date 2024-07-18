@@ -14,9 +14,9 @@ public class RoleService {
     @PostConstruct
     protected void init() {
         for (RoleName roleName : RoleName.values()) {
-            if (!roleRepository.existsByName(roleName.name())) {
+            if (!roleRepository.existsByName(roleName)) {
                 roleRepository.save(Role.builder()
-                        .name(roleName.name()).build()
+                        .name(roleName).build()
                 );
             }
         }

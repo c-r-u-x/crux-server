@@ -35,4 +35,10 @@ public class MemberService {
         return MemberDto.builder()
                 .build();
     }
+
+    // 멤버 조회
+    public Member getMember(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(MemberException.MemberNotFoundException::new);
+    }
 }

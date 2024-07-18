@@ -41,12 +41,10 @@ public class JwtTokenProvider {
     public String createToken(Long memberId, JwtTokenType tokenType) throws MemberException {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberException.MemberNotFoundException::new);
-        // 토큰 생성
-        Claims claims = Jwts.claims().setSubject(member.getId().toString()); // JWT payload 에 저장되는 정보단위, 보통 여기서 user를 식별하는 값을 넣는다.
-        claims.put("type", tokenType.getTokenType()); // 토큰 타입 (access token, refresh token)
+
+        // 토큰 만료 시간 설정
         Date now = new Date();
         Date expiration;
-
         if (tokenType == JwtTokenType.REFRESH_TOKEN) { // refresh token
             expiration = new Date(now.getTime() + envBean.getRefreshTokenTime());
         } else if (tokenType == JwtTokenType.ACCESS_TOKEN) { // access token
@@ -55,18 +53,20 @@ public class JwtTokenProvider {
             throw new JwtCustomException.JwtInvalidException();
         }
 
+        // 토큰 생성 후 반환
         return Jwts.builder()
-                .setClaims(claims) // 정보 저장
-                .setIssuedAt(now) // 토큰 발행 시간 정보
-                .setExpiration(expiration) // set Expire Time
-                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), SignatureAlgorithm.HS256) // signature 에 들어갈 secret값 세팅
+                .subject(member.getId().toString())
+                .claim("type", tokenType.getTokenType())
+                .issuedAt(now)
+                .expiration(expiration)
+                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), Jwts.SIG.HS256) // 사용할 암호화 알고리즘과 signature에 들어갈 secret값 세팅
                 .compact();
     }
 
     // JWT 토큰에서 인증 정보 조회
     @Transactional
     public Authentication getAuthentication(Jws<Claims> claimsJws) throws MemberException {
-        String memberId = claimsJws.getBody().getSubject();
+        String memberId = claimsJws.getPayload().getSubject();
 
         Member member = memberRepository.findById(Long.parseLong(memberId))
                 .orElseThrow(MemberException.MemberNotFoundException::new);
@@ -96,16 +96,17 @@ public class JwtTokenProvider {
 
 //    // 토큰의 유효성 + 만료일자 확인
     public Jws<Claims> validateAndParseToken(String jwt) {
-        JwtParser jwtParser = Jwts.parserBuilder()
-                .setSigningKey(secretKey.getBytes()).build();
-        return jwtParser.parseClaimsJws(jwt);
+        JwtParser jwtParser = Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
+                .build();
+        return jwtParser.parseSignedClaims(jwt);
     }
 
     public boolean isRefreshToken(Jws<Claims> jws) {
-        return jws.getBody().get("type").equals(JwtTokenType.REFRESH_TOKEN.getTokenType());
+        return jws.getPayload().get("type").equals(JwtTokenType.REFRESH_TOKEN.getTokenType());
     }
 
     public boolean isAccessToken(Jws<Claims> jws) {
-        return jws.getBody().get("type").equals(JwtTokenType.ACCESS_TOKEN.getTokenType());
+        return jws.getPayload().get("type").equals(JwtTokenType.ACCESS_TOKEN.getTokenType());
     }
 }
