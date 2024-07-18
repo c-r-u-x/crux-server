@@ -65,7 +65,7 @@ public class OAuth2Service extends DefaultOAuth2UserService {
         return memberRepository.findByOauth2id(oauth2Id)
                 .orElseGet(() -> memberRepository.save(Member.builder()
                         .oauth2id(oauth2Id)
-                        .name(name)
+                        .nickName(name)
                         .role(role)
                         .build()));
     }

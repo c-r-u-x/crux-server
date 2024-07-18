@@ -13,7 +13,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @QueryMapping
-    public Member getMember(@Argument Long id) {
+    public Member getMember(@Argument Integer id) {
         return memberService.getMember(id);
     }
 }

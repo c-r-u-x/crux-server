@@ -14,23 +14,27 @@ import lombok.NoArgsConstructor;
 public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "oauth2id", nullable = false, unique = true, length = 50)
     private String oauth2id;
 
-    @Column(name = "name", length = 30)
-    private String name;
+    @Column(name = "nick_name", length = 255)
+    private String nickName;
+
+    @Column(name = "description", length = 255)
+    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
     @Builder
-    public Member(Long id, String oauth2id, String name, Role role) {
+    public Member(Integer id, String oauth2id, String nickName, String description, Role role) {
         this.id = id;
         this.oauth2id = oauth2id;
-        this.name = name;
+        this.nickName = nickName;
+        this.description = description;
         this.role = role;
     }
 }

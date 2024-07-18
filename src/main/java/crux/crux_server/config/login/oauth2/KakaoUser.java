@@ -10,14 +10,14 @@ import java.util.Map;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class KakaoUser implements CustomOAuth2User {
     private String registrationId;  // kakao
-    private Long memberId;  // DB에 저장된 id
+    private Integer memberId;  // DB에 저장된 id
     private String name;  // kakao 닉네임
     private String oauth2Id;  // kakaoId
     private Map<String, Object> attributes;  // kakao 정보
     private Collection<? extends GrantedAuthority> authorities;  // 권한
 
     @Override
-    public Long getMemberId() {
+    public Integer getMemberId() {
         return memberId;
     }
     @Override
@@ -29,7 +29,7 @@ public class KakaoUser implements CustomOAuth2User {
         return registrationId;
     }
     @Builder
-    public KakaoUser(String registrationId, Long memberId, String name, String oauth2Id, Map<String, Object> attributes, Collection<? extends GrantedAuthority> authorities) {
+    public KakaoUser(String registrationId, Integer memberId, String name, String oauth2Id, Map<String, Object> attributes, Collection<? extends GrantedAuthority> authorities) {
         this.registrationId = registrationId;
         this.memberId = memberId;
         this.name = name;

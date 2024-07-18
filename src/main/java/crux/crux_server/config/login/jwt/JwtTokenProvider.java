@@ -38,7 +38,7 @@ public class JwtTokenProvider {
 
     // JWT 토큰 생성
     @Transactional
-    public String createToken(Long memberId, JwtTokenType tokenType) throws MemberException {
+    public String createToken(Integer memberId, JwtTokenType tokenType) throws MemberException {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberException.MemberNotFoundException::new);
 
@@ -68,7 +68,7 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(Jws<Claims> claimsJws) throws MemberException {
         String memberId = claimsJws.getPayload().getSubject();
 
-        Member member = memberRepository.findById(Long.parseLong(memberId))
+        Member member = memberRepository.findById(Integer.parseInt(memberId))
                 .orElseThrow(MemberException.MemberNotFoundException::new);
 
         // todo: Member 테이블 결정 후 AuthMember 객체 수정

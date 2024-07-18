@@ -1,6 +1,5 @@
 package crux.crux_server.domain.member.service;
 
-import crux.crux_server.domain.member.dto.MemberDto;
 import crux.crux_server.domain.member.entity.Member;
 import crux.crux_server.domain.member.exception.MemberException;
 import crux.crux_server.domain.member.repository.MemberRepository;
@@ -10,9 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
+@Slf4j(topic = "member-service")
 public class MemberService {
     private final MemberRepository memberRepository;
 
@@ -28,16 +27,8 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    // 멤버 dto 생성
-    @Transactional
-    public MemberDto makeMemberDto(Member member) {
-        // todo: 멤버 dto 생성
-        return MemberDto.builder()
-                .build();
-    }
-
     // 멤버 조회
-    public Member getMember(Long id) {
+    public Member getMember(Integer id) {
         return memberRepository.findById(id)
                 .orElseThrow(MemberException.MemberNotFoundException::new);
     }

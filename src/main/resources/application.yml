@@ -28,7 +28,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: update  # flyway가 실행되고 ddl-auto가 실행됨. 따라서 create로 설정하면 안됨. 배포 시에는 validate로 설정.
+      ddl-auto: validate  # flyway가 실행되고 ddl-auto가 실행됨. 따라서 create로 설정하면 안됨. 배포 시에는 validate로 설정.
     show-sql: false
     properties:
       hibernate:

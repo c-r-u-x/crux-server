@@ -11,11 +11,11 @@ import java.util.List;
 
 @Getter
 public class AuthMember implements Principal {
-    private final Long id;
+    private final Integer id;
     private final RoleName role;
 
     @Builder
-    public AuthMember(Long id, RoleName role) {
+    public AuthMember(Integer id, RoleName role) {
         this.id = id;
         this.role = role;
     }

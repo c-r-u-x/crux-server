@@ -9,6 +9,6 @@ import java.util.Optional;
 
 
 @GraphQlRepository
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Integer> {
     Optional<Member> findByOauth2id(String oauth2Id);
 }

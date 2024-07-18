@@ -15,14 +15,14 @@ import lombok.NoArgsConstructor;
 public class Role extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, unique = true)
     private RoleName name;
 
     @Builder
-    public Role(Long id, RoleName name) {
+    public Role(Integer id, RoleName name) {
         this.id = id;
         this.name = name;
     }
